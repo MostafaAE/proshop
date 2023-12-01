@@ -63,7 +63,7 @@ const productSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      required: ture,
+      required: true,
       default: 0,
     },
     countInStock: {
