@@ -10,3 +10,13 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
     data: products,
   });
 });
+
+exports.getProduct = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+
+  res.status(200).json({
+    status: 'success',
+    data: product,
+  });
+});
