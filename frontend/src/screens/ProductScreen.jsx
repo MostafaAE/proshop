@@ -1,22 +1,25 @@
 import { Link, useParams } from 'react-router-dom';
 import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import Rating from '../components/Rating';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
 
 function ProductScreen() {
   const { id: productId } = useParams();
-  const [product, setProduct] = useState({});
 
-  useEffect(() => {
-    const fetchProduct = async productId => {
-      const { data } = await axios(`/api/products/${productId}`);
-      console.log(data);
-      setProduct(data.data);
-    };
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGetProductDetailsQuery(productId);
 
-    fetchProduct(productId);
-  }, [productId]);
+  if (isLoading) return <Loader />;
+
+  if (error)
+    return (
+      <Message variant="danger">{error?.data?.message || error.error}</Message>
+    );
 
   return (
     <>
