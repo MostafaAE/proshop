@@ -2,12 +2,16 @@ import { Col, Row } from 'react-bootstrap';
 import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
+import Message from '../components/Message';
 
 function HomeScreen() {
   const { data: products, isLoading, error } = useGetProductsQuery();
 
   if (isLoading) return <Loader />;
-  if (error) return <div>{error?.data?.message || error.error}</div>;
+  if (error)
+    return (
+      <Message variant="danger">{error?.data?.message || error.error}</Message>
+    );
 
   return (
     <>

@@ -3,6 +3,7 @@ import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import Rating from '../components/Rating';
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
+import Message from '../components/Message';
 
 function ProductScreen() {
   const { id: productId } = useParams();
@@ -15,7 +16,10 @@ function ProductScreen() {
 
   if (isLoading) return <Loader />;
 
-  if (error) return <div>{error?.data?.message || error.error}</div>;
+  if (error)
+    return (
+      <Message variant="danger">{error?.data?.message || error.error}</Message>
+    );
 
   return (
     <>
