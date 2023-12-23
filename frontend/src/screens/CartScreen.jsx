@@ -11,7 +11,7 @@ import {
   Row,
 } from 'react-bootstrap';
 import Message from '../components/Message';
-import { addToCart } from '../slices/cartSlice';
+import { addToCart, removeFromCart } from '../slices/cartSlice';
 
 function CartScreen() {
   const navigate = useNavigate();
@@ -22,6 +22,10 @@ function CartScreen() {
 
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
+  };
+
+  const removeFromCartHandler = id => {
+    dispatch(removeFromCart(id));
   };
 
   return (
@@ -60,7 +64,11 @@ function CartScreen() {
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                    <Button type="button" variant="light">
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => removeFromCartHandler(item._id)}
+                    >
                       <FaTrash />
                     </Button>
                   </Col>
