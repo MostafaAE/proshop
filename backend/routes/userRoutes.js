@@ -11,7 +11,13 @@ router.route('/login').post(userController.loginUser);
 
 router.route('/logout').post(userController.logoutUser);
 
-router.route('/').get(userController.getUsers);
+router
+  .route('/')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    userController.getUsers
+  );
 
 router
   .route('/profile')
