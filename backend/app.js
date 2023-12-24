@@ -5,6 +5,7 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 const productRouter = require('./routes/productRoutes');
+const userRouter = require('./routes/userRoutes');
 
 // Development logging
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
@@ -14,6 +15,7 @@ app.use(express.json({ limit: '10kb' }));
 
 // ROUTES
 app.use('/api/products', productRouter);
+app.use('/api/users', userRouter);
 
 // Unhandled routes handler middleware
 app.all('*', (req, res, next) => {
