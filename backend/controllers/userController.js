@@ -68,7 +68,11 @@ exports.signupUser = catchAsync(async (req, res, next) => {
 // @route POST /api/users/logout
 // @access Private
 exports.logoutUser = catchAsync(async (req, res, next) => {
-  res.send('logout user');
+  res.cookie('jwt', '', { httpOnly: true, expiresIn: new Date(0) });
+
+  res.status(200).json({
+    status: 'success',
+  });
 });
 
 // @desc  Get user profile
