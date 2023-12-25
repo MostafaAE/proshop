@@ -61,7 +61,19 @@ exports.loginUser = catchAsync(async (req, res, next) => {
 // @route POST /api/users/signup
 // @access Public
 exports.signupUser = catchAsync(async (req, res, next) => {
-  res.send('register user');
+  const { name, email, password } = req.body;
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) return next(new AppError('User already exists', 401));
+
+  const user = await User.create({
+    email,
+    name,
+    password,
+  });
+
+  createSendToken(user, 200, res);
 });
 
 // @desc  Logout user
