@@ -110,7 +110,28 @@ exports.getUserProfile = catchAsync(async (req, res, next) => {
 // @route PATCH /api/users/profile
 // @access Private
 exports.updateUserProfile = catchAsync(async (req, res, next) => {
-  res.send('update user profile');
+  const user = await User.findById(req.user._id);
+
+  user.name = req.body.name || user.name;
+  user.email = req.body.email || user.email;
+
+  if (req.body.password) user.password = req.body.password;
+
+  const updatedUser = await user.save();
+
+  const { email, name, role, _id } = updatedUser;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: {
+        _id,
+        name,
+        email,
+        role,
+      },
+    },
+  });
 });
 
 // @desc  Get users
