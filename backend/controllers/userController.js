@@ -91,7 +91,19 @@ exports.logoutUser = catchAsync(async (req, res, next) => {
 // @route GET /api/users/profile
 // @access Private
 exports.getUserProfile = catchAsync(async (req, res, next) => {
-  res.send('get user profile');
+  const { email, name, role, _id } = req.user;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: {
+        _id,
+        name,
+        email,
+        role,
+      },
+    },
+  });
 });
 
 // @desc  Update user profile
