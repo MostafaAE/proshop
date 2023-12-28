@@ -1,25 +1,22 @@
 import { useEffect, useState } from 'react';
 import FormContainer from '../components/FormContainer';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
-import { useLoginMutation } from '../slices/usersApiSlice';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSignupMutation } from '../slices/usersApiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
 
-function LoginScreen() {
+function SignupScreen() {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [signup, { isLoading }] = useSignupMutation();
 
   const { userInfo } = useSelector(state => state.auth);
 
@@ -28,15 +25,18 @@ function LoginScreen() {
   let redirect = searchParams.get('redirect');
 
   useEffect(() => {
-    console.log(userInfo);
     if (userInfo) navigate(redirect || '/');
   }, [userInfo, redirect, navigate]);
 
   const submitHandler = async e => {
     e.preventDefault();
-    console.log('submit');
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await signup({ name, email, password }).unwrap();
       dispatch(setCredentials({ ...res?.data?.user }));
       navigate(redirect || '/');
     } catch (error) {
@@ -46,8 +46,18 @@ function LoginScreen() {
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
+      <h1>Sign Up</h1>
       <Form onSubmit={submitHandler}>
+        <Form.Group controlId="name" className="my-3">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter you name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
         <Form.Group controlId="email" className="my-3">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
@@ -68,13 +78,23 @@ function LoginScreen() {
           ></Form.Control>
         </Form.Group>
 
+        <Form.Group controlId="confirmPassword" className="my-3">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter confirm password"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
         <Button
           type="submit"
           variant="primary"
           className="mt-2"
           disabled={isLoading}
         >
-          Sign In
+          Sign Up
         </Button>
 
         {isLoading && <Loader />}
@@ -82,9 +102,9 @@ function LoginScreen() {
 
       <Row className="py-3">
         <Col>
-          New Customer?{' '}
-          <Link to={redirect ? `register?redirect=${redirect}` : '/signup'}>
-            Sign up
+          Already have an account?{' '}
+          <Link to={redirect ? `login?redirect=${redirect}` : '/login'}>
+            Login
           </Link>
         </Col>
       </Row>
@@ -92,4 +112,4 @@ function LoginScreen() {
   );
 }
 
-export default LoginScreen;
+export default SignupScreen;

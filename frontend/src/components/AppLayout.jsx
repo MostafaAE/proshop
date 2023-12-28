@@ -16,7 +16,7 @@ function AppLayout() {
 
   useEffect(() => {
     if (error) dispatch(setCredentials(null));
-    else dispatch(setCredentials({ ...data?.data?.user }));
+    else if (!isLoading) dispatch(setCredentials({ ...data?.data?.user }));
   }, [data, dispatch, error]);
 
   if (isLoading) return <Loader />;
