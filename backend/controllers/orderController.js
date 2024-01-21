@@ -1,3 +1,4 @@
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Order = require('./../models/orderModel');
 
@@ -5,7 +6,39 @@ const Order = require('./../models/orderModel');
 // @route POST /api/orders
 // @access Private
 exports.addOrderItems = catchAsync(async (req, res, next) => {
-  res.status(201).json('add order items');
+  const {
+    orderItems,
+    shippingAddress,
+    paymentMethod,
+    itemPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice,
+  } = req.body;
+
+  if (orderItems && orderItems.length === 0) {
+    next(new AppError('No order items', 400));
+  }
+
+  const order = new Order({
+    orderItems: orderItems.map(item => {
+      return {
+        ...item,
+        product: item._id,
+        _id: undefined,
+      };
+    }),
+    user: req.user._id,
+    shippingAddress,
+    paymentMethod,
+    itemPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice,
+  });
+
+  const createdOrder = await order.save();
+  res.status(201).json(createdOrder);
 });
 
 // @desc GET logged in user orders
