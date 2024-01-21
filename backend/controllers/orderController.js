@@ -25,6 +25,7 @@ exports.addOrderItems = catchAsync(async (req, res, next) => {
       return {
         ...item,
         product: item._id,
+        quantity: item.qty,
         _id: undefined,
       };
     }),
