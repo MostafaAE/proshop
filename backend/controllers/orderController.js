@@ -45,13 +45,20 @@ exports.addOrderItems = catchAsync(async (req, res, next) => {
 // @route GET /api/orders/myorders
 // @access Private
 exports.getMyOrders = catchAsync(async (req, res, next) => {
-  res.status(200).json('get my orders');
+  const orders = await Order.find({ user: req.user._id });
+  res.status(200).json(orders);
 });
 
 // @desc GET order by id
 // @route GET /api/orders/:id
 // @access Private
 exports.getOrderById = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.id).populate(
+    'user',
+    'name email'
+  );
+  if (!order) next(new AppError('Order not found', 404));
+
   res.status(200).json('get order by id');
 });
 
