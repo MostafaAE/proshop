@@ -56,9 +56,13 @@ exports.getMyOrders = catchAsync(async (req, res, next) => {
 exports.getOrderById = catchAsync(async (req, res, next) => {
   const order = await Order.findById(req.params.id).populate(
     'user',
-    'name email'
+    '_id name email'
   );
+
   if (!order) next(new AppError('Order not found', 404));
+
+  if (req.user.role !== 'admin' && !order.user._id.equals(req.user._id))
+    next(new AppError('You do not have an order with this id', 401));
 
   res.status(200).json(order);
 });
@@ -82,7 +86,7 @@ exports.updateOrderToPaid = catchAsync(async (req, res, next) => {
 
   const updatedOrder = await order.save();
 
-  req.status(200).json(updatedOrder);
+  res.status(200).json(updatedOrder);
 });
 
 // @desc Update order to delivered
