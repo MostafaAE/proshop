@@ -18,13 +18,7 @@ router
   .route('/myorders')
   .get(authController.protect, orderController.getMyOrders);
 
-router
-  .route('/:id')
-  .get(
-    authController.protect,
-    authController.restrictTo('admin'),
-    orderController.getOrderById
-  );
+router.route('/:id').get(authController.protect, orderController.getOrderById);
 
 router
   .route('/:id/pay')

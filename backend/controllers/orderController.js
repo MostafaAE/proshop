@@ -10,7 +10,7 @@ exports.addOrderItems = catchAsync(async (req, res, next) => {
     orderItems,
     shippingAddress,
     paymentMethod,
-    itemPrice,
+    itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
@@ -32,7 +32,7 @@ exports.addOrderItems = catchAsync(async (req, res, next) => {
     user: req.user._id,
     shippingAddress,
     paymentMethod,
-    itemPrice,
+    itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
@@ -60,7 +60,7 @@ exports.getOrderById = catchAsync(async (req, res, next) => {
   );
   if (!order) next(new AppError('Order not found', 404));
 
-  res.status(200).json('get order by id');
+  res.status(200).json(order);
 });
 
 // @desc Update order to paid
