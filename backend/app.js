@@ -7,6 +7,9 @@ const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
+const orderRouter = require('./routes/orderRoutes');
+
+const AppError = require('./utils/appError');
 
 // Development logging
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
@@ -19,6 +22,10 @@ app.use(cookieParser());
 // ROUTES
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
+app.use('/api/orders', orderRouter);
+app.get('/api/config/paypal', (req, res) =>
+  res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
+);
 
 // Unhandled routes handler middleware
 app.all('*', (req, res, next) => {
