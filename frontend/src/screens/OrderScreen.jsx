@@ -1,13 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import {
-  Button,
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Card,
-  Form,
-} from 'react-bootstrap';
+import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import Loader from './../components/Loader';
 import Message from './../components/Message';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
@@ -16,7 +8,7 @@ import {
   useGetPayPalClientIdQuery,
   usePayOrderMutation,
 } from '../slices/ordersApiSlice';
-import { useSelector } from 'react-redux';
+
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -39,24 +31,22 @@ function OrderScreen() {
     isLoading: loadingPayPal,
     error: errorPayPal,
   } = useGetPayPalClientIdQuery();
-  const { userInfo } = useSelector(state => state.auth);
 
   useEffect(() => {
     if (!errorPayPal && !loadingPayPal && paypal.clientId) {
-      const loadPayPalScript = async () => {
+      const loadPaypalScript = async () => {
         paypalDispatch({
-          type: 'restOptions',
+          type: 'resetOptions',
           value: {
-            client_id: paypal.clientId,
+            'client-id': paypal.clientId,
             currency: 'USD',
           },
         });
         paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
       };
-
       if (order && !order.isPaid) {
         if (!window.paypal) {
-          loadPayPalScript();
+          loadPaypalScript();
         }
       }
     }
@@ -65,7 +55,7 @@ function OrderScreen() {
   function onApprove(data, actions) {
     return actions.order.capture().then(async details => {
       try {
-        await payOrder({ orderId, details });
+        await payOrder({ orderId, details }).unwrap();
         refetch();
         toast.success('Payment successful');
       } catch (err) {
