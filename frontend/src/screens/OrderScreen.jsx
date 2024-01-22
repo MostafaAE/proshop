@@ -27,6 +27,7 @@ function OrderScreen() {
     isLoading,
     isError,
     refetch,
+    error,
   } = useGetOrderDetailsQuery(orderId);
 
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
@@ -101,7 +102,11 @@ function OrderScreen() {
   }
 
   if (isLoading) return <Loader />;
-  if (isError) return <Message variant="danger">Error</Message>;
+
+  if (error)
+    return (
+      <Message variant="danger">{error?.data?.message || error.error}</Message>
+    );
   console.log(order);
 
   return (

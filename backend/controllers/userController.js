@@ -112,6 +112,7 @@ exports.getUserProfile = catchAsync(async (req, res, next) => {
 exports.updateUserProfile = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
+  console.log(req.body);
   user.name = req.body.name || user.name;
   user.email = req.body.email || user.email;
 

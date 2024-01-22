@@ -22,7 +22,11 @@ router
 router
   .route('/profile')
   .get(authController.protect, userController.getUserProfile)
-  .patch(authController.protect, userController.updateUserProfile);
+  .patch(
+    authController.protect,
+    authController.restrictTo('user', 'admin'),
+    userController.updateUserProfile
+  );
 
 router
   .route('/:id')
