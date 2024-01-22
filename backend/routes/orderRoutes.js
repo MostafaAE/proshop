@@ -22,11 +22,7 @@ router.route('/:id').get(authController.protect, orderController.getOrderById);
 
 router
   .route('/:id/pay')
-  .patch(
-    authController.protect,
-    authController.restrictTo('admin'),
-    orderController.updateOrderToPaid
-  );
+  .patch(authController.protect, orderController.updateOrderToPaid);
 
 router
   .route('/:id/deliver')

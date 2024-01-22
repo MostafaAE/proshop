@@ -23,6 +23,9 @@ app.use(cookieParser());
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
+app.get('/api/config/paypal', (req, res) =>
+  res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
+);
 
 // Unhandled routes handler middleware
 app.all('*', (req, res, next) => {
