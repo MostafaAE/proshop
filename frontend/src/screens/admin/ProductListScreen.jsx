@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
   useCreateProductMutation,
+  useDeleteProductMutation,
   useGetProductsQuery,
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
@@ -13,13 +14,20 @@ import { toast } from 'react-toastify';
 function ProductListScreen() {
   const { data: products, refetch, isLoading, error } = useGetProductsQuery();
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
+  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
 
-  function deleteHandler(productId) {
-    console.log(productId);
+  async function deleteHandler(productId) {
+    if (window.confirm('Are you sure you want to delete this product?'))
+      try {
+        await deleteProduct(productId);
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
   }
 
   async function createProductHandler() {
-    if (window.confirm('Are you sure you want to create a new product??'))
+    if (window.confirm('Are you sure you want to create a new product?'))
       try {
         await createProduct();
         refetch();
@@ -83,6 +91,7 @@ function ProductListScreen() {
           </tbody>
         </Table>
         {isCreating && <Loader />}
+        {isDeleting && <Loader />}
       </>
     </>
   );

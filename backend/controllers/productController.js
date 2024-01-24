@@ -1,3 +1,4 @@
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Product = require('./../models/productModel');
 
@@ -38,4 +39,18 @@ exports.createProduct = catchAsync(async (req, res) => {
 
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
+});
+
+// @desc    Delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
+exports.deleteProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+
+  if (!product) return next(new AppError('Product not found', 404));
+
+  await Product.deleteOne({ _id: product._id });
+  res.status(204).json({
+    message: 'Product removed',
+  });
 });
