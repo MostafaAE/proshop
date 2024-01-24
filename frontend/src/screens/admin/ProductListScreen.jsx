@@ -2,15 +2,30 @@ import { Button, Table, Row, Col } from 'react-bootstrap';
 import Loader from '../../components/Loader';
 import Message from '../../components/Message';
 
-import { FaTimes, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useGetProductsQuery } from '../../slices/productsApiSlice';
+import {
+  useCreateProductMutation,
+  useGetProductsQuery,
+} from '../../slices/productsApiSlice';
+import { toast } from 'react-toastify';
 
 function ProductListScreen() {
-  const { data: products, isLoading, error } = useGetProductsQuery();
+  const { data: products, refetch, isLoading, error } = useGetProductsQuery();
+  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
 
   function deleteHandler(productId) {
     console.log(productId);
+  }
+
+  async function createProductHandler() {
+    if (window.confirm('Are you sure you want to create a new product??'))
+      try {
+        await createProduct();
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
   }
 
   if (isLoading) return <Loader />;
@@ -23,11 +38,12 @@ function ProductListScreen() {
           <h1>Products</h1>
         </Col>
         <Col className="text-end">
-          <Button className="btn-sm m-3">
+          <Button className="btn-sm m-3" onClick={createProductHandler}>
             <FaEdit /> Create Product
           </Button>
         </Col>
       </Row>
+
       <>
         <Table striped hover responsive className="table-sm">
           <thead>
@@ -66,6 +82,7 @@ function ProductListScreen() {
             ))}
           </tbody>
         </Table>
+        {isCreating && <Loader />}
       </>
     </>
   );
