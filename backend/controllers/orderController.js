@@ -77,10 +77,10 @@ exports.getOrderById = catchAsync(async (req, res, next) => {
     '_id name email'
   );
 
-  if (!order) next(new AppError('Order not found', 404));
+  if (!order) return next(new AppError('Order not found', 404));
 
   if (req.user.role !== 'admin' && !order.user._id.equals(req.user._id))
-    next(new AppError('You do not have an order with this id', 401));
+    return next(new AppError('You do not have an order with this id', 401));
 
   res.status(200).json(order);
 });
@@ -125,12 +125,26 @@ exports.updateOrderToPaid = catchAsync(async (req, res, next) => {
 // @route PATCH /api/orders/:id/deliver
 // @access Private/Admin
 exports.updateOrderToDelivered = catchAsync(async (req, res, next) => {
-  res.status(200).json('update order to delivered');
+  const { id } = req.params;
+
+  const updatedOrder = await Order.findByIdAndUpdate(
+    id,
+    {
+      isDelivered: true,
+      deliveredAt: Date.now(),
+    },
+    { new: true }
+  );
+
+  if (!updatedOrder) return next(new AppError('Order not found', 404));
+
+  res.status(200).json(updatedOrder);
 });
 
 // @desc GET all orders
 // @route GET /api/orders
 // @access Private/Admin
 exports.getOrders = catchAsync(async (req, res, next) => {
-  res.status(200).json('get my orders');
+  const orders = await Order.find().populate('user', '_id name');
+  res.status(200).json(orders);
 });
