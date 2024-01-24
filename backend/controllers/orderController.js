@@ -132,5 +132,6 @@ exports.updateOrderToDelivered = catchAsync(async (req, res, next) => {
 // @route GET /api/orders
 // @access Private/Admin
 exports.getOrders = catchAsync(async (req, res, next) => {
-  res.status(200).json('get my orders');
+  const orders = await Order.find().populate('user', '_id name');
+  res.status(200).json(orders);
 });
