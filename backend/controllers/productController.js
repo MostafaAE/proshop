@@ -54,3 +54,16 @@ exports.deleteProduct = catchAsync(async (req, res, next) => {
     message: 'Product removed',
   });
 });
+
+// @desc    Edit a product
+// @route   PATCH /api/products/:id
+// @access  Private/Admin
+exports.updateProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+
+  if (!product) return next(new AppError('Product not found', 404));
+
+  const updatedProduct = await product.updateOne(req.body);
+
+  res.status(200).json(updatedProduct);
+});

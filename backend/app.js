@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -9,6 +10,7 @@ const app = express();
 const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const uploadRouter = require('./routes/uploadRoutes');
 
 const AppError = require('./utils/appError');
 
@@ -28,6 +30,10 @@ app.use('/api/orders', orderRouter);
 app.get('/api/config/paypal', (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
 );
+app.use('/api/upload', uploadRouter);
+
+const dirname = path.resolve();
+app.use('/uploads', express.static(path.join(dirname, '/uploads')));
 
 // Unhandled routes handler middleware
 app.all('*', (req, res, next) => {

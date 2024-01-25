@@ -21,6 +21,7 @@ function ProductListScreen() {
       try {
         await deleteProduct(productId);
         refetch();
+        toast.success('Product deleted successfully');
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -31,6 +32,7 @@ function ProductListScreen() {
       try {
         await createProduct();
         refetch();
+        toast.success('Product created successfully');
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -69,11 +71,11 @@ function ProductListScreen() {
               <tr key={product._id}>
                 <td>{product._id}</td>
                 <td>{product.name}</td>
-                <td>{product.price}</td>
+                <td>${product.price}</td>
                 <td>{product.category}</td>
                 <td>{product.brand}</td>
                 <td>
-                  <LinkContainer to={`admin/product/${product._id}/edit`}>
+                  <LinkContainer to={`/admin/product/${product._id}/edit`}>
                     <Button variant="light" className="btn btn-sm">
                       <FaEdit />
                     </Button>
