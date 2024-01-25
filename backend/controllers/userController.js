@@ -139,26 +139,50 @@ exports.updateUserProfile = catchAsync(async (req, res, next) => {
 // @route Get /api/users/
 // @access Private/Admin
 exports.getUsers = catchAsync(async (req, res, next) => {
-  res.send('get users');
+  const users = await User.find();
+  res.status(200).json(users);
 });
 
 // @desc  Get user by id
 // @route Get /api/users/:id
 // @access Private/Admin
 exports.getUserById = catchAsync(async (req, res, next) => {
-  res.send('get user by id');
+  const user = await User.findById(req.params.id).select('-password');
+
+  if (!user) return next(new AppError('User not found', 404));
+
+  res.status(200).json(user);
 });
 
 // @desc  Delete user
 // @route Delete /api/users/:id
 // @access Private/Admin
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  res.send('delete user');
+  const user = await User.findById(req.params.id);
+
+  if (!user) return next(new AppError('User not found', 404));
+
+  if (user.role === 'admin')
+    return next(new AppError('Can not delete admin user', 403));
+
+  await User.deleteOne({ _id: user._id });
+  res.status(204).json({ message: 'User removed' });
 });
 
 // @desc  Update user
 // @route PUT /api/users/:id
 // @access Private/Admin
 exports.updateUser = catchAsync(async (req, res, next) => {
-  res.send('update user');
+  const user = await User.findById(req.params.id);
+
+  if (!user) return next(new AppError('User not found', 404));
+
+  const { name, email, role } = req.body;
+  const updatedUser = await user.updateOne({ name, email, role });
+  res.status(200).json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    role: updatedUser.role,
+  });
 });
