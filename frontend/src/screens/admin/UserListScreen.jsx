@@ -57,14 +57,14 @@ const UserListScreen = () => {
                     <a href={`mailto:${user.email}`}>{user.email}</a>
                   </td>
                   <td>
-                    {user.isAdmin ? (
+                    {user.role === 'admin' ? (
                       <FaCheck style={{ color: 'green' }} />
                     ) : (
                       <FaTimes style={{ color: 'red' }} />
                     )}
                   </td>
                   <td>
-                    {!user.isAdmin && (
+                    {!(user.role === 'admin') && (
                       <>
                         <LinkContainer
                           to={`/admin/user/${user._id}/edit`}

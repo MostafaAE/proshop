@@ -179,6 +179,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
   const { name, email, role } = req.body;
   const updatedUser = await user.updateOne({ name, email, role });
+  console.log(updatedUser);
   res.status(200).json({
     _id: updatedUser._id,
     name: updatedUser.name,
