@@ -7,6 +7,7 @@ import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
 import { resetCart } from '../slices/cartSlice';
 import { useNavigate } from 'react-router-dom';
+import { apiSlice } from '../slices/apiSlice';
 import SearchBox from './SearchBox';
 
 function Header() {
@@ -22,6 +23,7 @@ function Header() {
       await logoutApi();
       dispatch(logout());
       dispatch(resetCart());
+      dispatch(apiSlice.util.resetApiState());
       navigate('/login');
     } catch (error) {}
   };
