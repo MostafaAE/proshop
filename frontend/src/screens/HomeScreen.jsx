@@ -8,7 +8,7 @@ import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
 
 function HomeScreen() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const page = searchParams.get('page') || 1;
   const search = searchParams.get('search') || '';
   const { data, isLoading, error, isFetching } = useGetProductsQuery({
@@ -30,6 +30,7 @@ function HomeScreen() {
         </Link>
       )}
       <ProductCarousel />
+
       <h1>Latest Products</h1>
       <Row>
         {data.products.map(product => (

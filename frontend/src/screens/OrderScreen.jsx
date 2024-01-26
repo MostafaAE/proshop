@@ -19,7 +19,6 @@ function OrderScreen() {
   const {
     data: order,
     isLoading,
-    isError,
     refetch,
     error,
   } = useGetOrderDetailsQuery(orderId);
@@ -114,8 +113,6 @@ function OrderScreen() {
     return (
       <Message variant="danger">{error?.data?.message || error.error}</Message>
     );
-  console.log(order);
-  console.log(userInfo);
 
   return (
     <>

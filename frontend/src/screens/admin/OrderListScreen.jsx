@@ -10,8 +10,11 @@ function OrderListScreen() {
 
   if (isLoading) return <Loader />;
 
-  if (error) return <Message variant="danger">{error}</Message>;
-  console.log(orders);
+  if (error)
+    return (
+      <Message variant="danger">{error?.data?.message || error.error}</Message>
+    );
+
   return (
     <>
       <h1>Orders</h1>

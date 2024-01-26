@@ -41,7 +41,6 @@ exports.addOrderItems = catchAsync(async (req, res, next) => {
     const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
       calcPrices(dbOrderItems);
 
-    console.log(dbOrderItems);
     const order = new Order({
       orderItems: dbOrderItems,
       user: req.user._id,
@@ -53,7 +52,6 @@ exports.addOrderItems = catchAsync(async (req, res, next) => {
       totalPrice,
     });
 
-    // console.log(order);
     const createdOrder = await order.save();
 
     res.status(201).json(createdOrder);

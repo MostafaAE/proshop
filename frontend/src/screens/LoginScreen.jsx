@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import FormContainer from '../components/FormContainer';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLoginMutation } from '../slices/usersApiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
@@ -23,18 +18,17 @@ function LoginScreen() {
 
   const { userInfo } = useSelector(state => state.auth);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   let redirect = searchParams.get('redirect');
 
   useEffect(() => {
-    console.log(userInfo);
     if (userInfo) navigate(redirect || '/');
   }, [userInfo, redirect, navigate]);
 
   const submitHandler = async e => {
     e.preventDefault();
-    console.log('submit');
+
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res?.data?.user }));

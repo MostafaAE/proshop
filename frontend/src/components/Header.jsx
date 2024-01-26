@@ -4,25 +4,26 @@ import { LinkContainer } from 'react-router-bootstrap';
 import logo from '../assets/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLogoutMutation } from '../slices/usersApiSlice';
-import { setCredentials } from '../slices/authSlice';
+import { logout } from '../slices/authSlice';
+import { resetCart } from '../slices/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
 
 function Header() {
   const { cartItems } = useSelector(state => state.cart);
   const { userInfo } = useSelector(state => state.auth);
-  const [logout, { isLoading }] = useLogoutMutation();
+  const [logoutApi] = useLogoutMutation();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
     try {
-      await logout();
-      dispatch(setCredentials(null));
+      await logoutApi();
+      dispatch(logout());
+      dispatch(resetCart());
       navigate('/login');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
