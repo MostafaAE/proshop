@@ -35,6 +35,15 @@ app.use('/api/upload', uploadRouter);
 const dirname = path.resolve();
 app.use('/uploads', express.static(path.join(dirname, '/uploads')));
 
+if (process.env.NODE_ENV === 'production') {
+  // set static folder
+  app.use(express.static(path.join(dirname, '/frontend/dist')));
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(dirname, 'frontend', 'dist', 'index.html'))
+  );
+} else {
+  app.get('/', (req, res) => res.send('API is running.....'));
+}
 // Unhandled routes handler middleware
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
