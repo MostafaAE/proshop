@@ -98,7 +98,10 @@ exports.updateOrderToPaid = catchAsync(async (req, res, next) => {
 
   if (order) {
     // check the correct amount was paid
-    const paidCorrectAmount = order.totalPrice.toString() === value;
+    const tolerance = 0.0001; // Adjust based on your precision requirements
+    const paypalPaidAmount = parseFloat(value);
+    const paidCorrectAmount =
+      Math.abs(paypalPaidAmount - order.totalPrice) < tolerance;
     if (!paidCorrectAmount) throw new Error('Incorrect amount paid');
 
     order.isPaid = true;
