@@ -25,4 +25,7 @@ During this project, I did:
 - Mark orders as delivered option
 - Checkout process (shipping, payment method, etc)
 - PayPal / credit card integration
-- Database seeder (products & users)
+
+## Live Project
+
+You can check out the live project [here](https://proshop-sk13.onrender.com).
