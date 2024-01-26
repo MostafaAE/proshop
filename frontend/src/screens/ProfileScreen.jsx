@@ -26,9 +26,11 @@ function ProfileScreen() {
   const { data: myOrders, isLoading, error } = useGetMyOrdersQuery();
 
   useEffect(() => {
-    setName(userInfo.name);
-    setEmail(userInfo.email);
-  }, [userInfo.name, userInfo.email]);
+    if (userInfo) {
+      setName(userInfo?.name);
+      setEmail(userInfo?.email);
+    }
+  }, [userInfo]);
 
   const submitHandler = async e => {
     e.preventDefault();
