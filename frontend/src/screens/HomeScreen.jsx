@@ -30,6 +30,7 @@ function HomeScreen() {
         </Link>
       )}
       <ProductCarousel />
+
       <h1>Latest Products</h1>
       <Row>
         {data.products.map(product => (
