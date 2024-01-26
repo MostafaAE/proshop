@@ -67,3 +67,41 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
 
   res.status(200).json(updatedProduct);
 });
+
+// @desc    Create a new review
+// @route   POST /api/products/:id/reviews
+// @access  Private
+exports.createProductReview = catchAsync(async (req, res, next) => {
+  const { rating, comment } = req.body;
+  const product = await Product.findById(req.params.id);
+
+  if (!product) return next(new AppError('Product not found', 404));
+
+  // Prevent the user from reviewing a product more than one time
+  const alreadyReviewed = product.reviews.find(
+    review => review.user.toString() === req.user._id.toString()
+  );
+
+  if (alreadyReviewed)
+    return next(new AppError('You have already reviewed this product', 400));
+
+  const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+    user: req.user._id,
+  };
+
+  product.reviews.push(review);
+
+  product.numReviews = product.reviews.length;
+
+  product.rating =
+    product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+    product.reviews.length;
+
+  await product.save();
+  res.status(201).json({
+    message: 'Review added',
+  });
+});
