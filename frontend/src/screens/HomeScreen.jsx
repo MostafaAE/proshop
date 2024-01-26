@@ -29,7 +29,7 @@ function HomeScreen() {
           Go Back
         </Link>
       )}
-      <ProductCarousel />
+      {!search && <ProductCarousel />}
 
       <h1>Latest Products</h1>
       <Row>

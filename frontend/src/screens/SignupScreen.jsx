@@ -30,10 +30,11 @@ function SignupScreen() {
 
   const submitHandler = async e => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
+    if (!name || !email || !password || !confirmPassword)
+      return toast.error('Please enter all fields');
+
+    if (password !== confirmPassword)
+      return toast.error('Passwords do not match');
 
     try {
       const res = await signup({ name, email, password }).unwrap();
@@ -55,6 +56,7 @@ function SignupScreen() {
             placeholder="Enter you name"
             value={name}
             onChange={e => setName(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
 
@@ -65,6 +67,7 @@ function SignupScreen() {
             placeholder="Enter email"
             value={email}
             onChange={e => setEmail(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
 
@@ -75,6 +78,7 @@ function SignupScreen() {
             placeholder="Enter password"
             value={password}
             onChange={e => setPassword(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
 
@@ -85,6 +89,7 @@ function SignupScreen() {
             placeholder="Enter confirm password"
             value={confirmPassword}
             onChange={e => setConfirmPassword(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
 

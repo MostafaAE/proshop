@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function SearchBox() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get('search');
+  const navigate = useNavigate();
 
-  const [keyword, setKeyword] = useState(search || '');
+  const [keyword, setKeyword] = useState('');
 
   const submitHandler = e => {
     e.preventDefault();
     if (keyword) {
-      setSearchParams({
-        search: keyword.trim(),
-      });
+      navigate(`/?search=${keyword}`);
+
       setKeyword('');
     }
   };

@@ -29,6 +29,8 @@ function LoginScreen() {
   const submitHandler = async e => {
     e.preventDefault();
 
+    if (!email || !password) return toast.error('Please enter all fields');
+
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res?.data?.user }));
@@ -49,6 +51,7 @@ function LoginScreen() {
             placeholder="Enter email"
             value={email}
             onChange={e => setEmail(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
 
@@ -59,6 +62,7 @@ function LoginScreen() {
             placeholder="Enter password"
             value={password}
             onChange={e => setPassword(e.target.value)}
+            required
           ></Form.Control>
         </Form.Group>
 
