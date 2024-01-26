@@ -1,13 +1,9 @@
 import { Outlet, Navigate } from 'react-router-dom';
-import { useGetUserProfileQuery } from '../slices/usersApiSlice';
-import Loader from './Loader';
+
+import { useSelector } from 'react-redux';
 
 function AdminRoute() {
-  const { data, isLoading } = useGetUserProfileQuery();
-
-  if (isLoading) return <Loader />;
-
-  const userInfo = data?.data?.user;
+  const { userInfo } = useSelector(state => state.auth);
 
   return userInfo && userInfo.role === 'admin' ? (
     <Outlet />
