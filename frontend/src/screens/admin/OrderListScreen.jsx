@@ -11,7 +11,7 @@ function OrderListScreen() {
   if (isLoading) return <Loader />;
 
   if (error) return <Message variant="danger">{error}</Message>;
-  console.log(orders);
+
   return (
     <>
       <h1>Orders</h1>

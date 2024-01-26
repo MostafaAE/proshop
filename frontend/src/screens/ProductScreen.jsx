@@ -70,7 +70,7 @@ function ProductScreen() {
       <Message variant="danger">{error?.data?.message || error.error}</Message>
     );
 
-  console.log(product);
+
   return (
     <>
       <Link className="btn btn-light my-3" to="/">

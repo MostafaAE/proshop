@@ -11,7 +11,7 @@ import SearchBox from './SearchBox';
 function Header() {
   const { cartItems } = useSelector(state => state.cart);
   const { userInfo } = useSelector(state => state.auth);
-  const [logout, { isLoading }] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,9 +20,7 @@ function Header() {
       await logout();
       dispatch(setCredentials(null));
       navigate('/login');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (

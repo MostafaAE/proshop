@@ -48,7 +48,6 @@ exports.loginUser = catchAsync(async (req, res, next) => {
   }
   // 2) Check if user exists and password is correct
   const user = await User.findOne({ email });
-  console.log(user);
 
   if (!user || !(await user.matchPassword(password)))
     return next(new AppError('Incorrect email or password', 401));
@@ -112,7 +111,6 @@ exports.getUserProfile = catchAsync(async (req, res, next) => {
 exports.updateUserProfile = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
-  console.log(req.body);
   user.name = req.body.name || user.name;
   user.email = req.body.email || user.email;
 
@@ -179,7 +177,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
   const { name, email, role } = req.body;
   const updatedUser = await user.updateOne({ name, email, role });
-  console.log(updatedUser);
+
   res.status(200).json({
     _id: updatedUser._id,
     name: updatedUser.name,

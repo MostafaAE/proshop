@@ -20,7 +20,7 @@ function SignupScreen() {
 
   const { userInfo } = useSelector(state => state.auth);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   let redirect = searchParams.get('redirect');
 

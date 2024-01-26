@@ -32,15 +32,13 @@ const ProductEditScreen = () => {
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
 
-  const [uploadProductImage, { isLoading: loadingUpload }] =
-    useUploadProductImageMutation();
+  const [uploadProductImage] = useUploadProductImageMutation();
 
   const navigate = useNavigate();
 
   const submitHandler = async e => {
     e.preventDefault();
     try {
-      console.log(productId);
       await updateProduct({
         productId,
         name,
