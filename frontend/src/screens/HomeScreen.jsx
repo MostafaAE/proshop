@@ -3,11 +3,20 @@ import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { Link, useSearchParams } from 'react-router-dom';
+import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 
 function HomeScreen() {
-  const { data: products, isLoading, error } = useGetProductsQuery();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page') || 1;
+  const search = searchParams.get('search') || '';
+  const { data, isLoading, error, isFetching } = useGetProductsQuery({
+    page,
+    search,
+  });
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isFetching) return <Loader />;
   if (error)
     return (
       <Message variant="danger">{error?.data?.message || error.error}</Message>
@@ -15,14 +24,21 @@ function HomeScreen() {
 
   return (
     <>
+      {search && (
+        <Link to="/" className="btn btn-light mb-4">
+          Go Back
+        </Link>
+      )}
+      <ProductCarousel />
       <h1>Latest Products</h1>
       <Row>
-        {products.map(product => (
+        {data.products.map(product => (
           <Col sm={12} md={6} lg={4} xl={3} key={product._id}>
             <Product product={product} />
           </Col>
         ))}
       </Row>
+      <Paginate pages={data.pages} page={page} keyword={search} />
     </>
   );
 }

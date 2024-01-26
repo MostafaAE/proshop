@@ -10,9 +10,13 @@ import {
   useGetProductsQuery,
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
+import { useParams, useSearchParams } from 'react-router-dom';
+import Paginate from '../../components/Paginate';
 
 function ProductListScreen() {
-  const { data: products, refetch, isLoading, error } = useGetProductsQuery();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page') || 1;
+  const { data, refetch, isLoading, error } = useGetProductsQuery({ page });
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
 
@@ -67,7 +71,7 @@ function ProductListScreen() {
             </tr>
           </thead>
           <tbody>
-            {products.map(product => (
+            {data.products.map(product => (
               <tr key={product._id}>
                 <td>{product._id}</td>
                 <td>{product.name}</td>
@@ -92,6 +96,7 @@ function ProductListScreen() {
             ))}
           </tbody>
         </Table>
+        <Paginate page={page} pages={data.pages} isAdmin={true} />
         {isCreating && <Loader />}
         {isDeleting && <Loader />}
       </>

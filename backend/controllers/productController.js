@@ -2,13 +2,35 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Product = require('./../models/productModel');
 
+exports.getTopProducts = (req, res, next) => {
+  req.query.sort = '-rating';
+  req.query.limit = '3';
+  next();
+};
 // @desc    Fetch all products
 // @route   GET /api/products
 // @access  Public
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find();
+  console.log('sort', req.query);
 
-  res.status(200).json(products);
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const sortBy = req.query.sort?.replaceAll(',', ' ');
+
+  const search = req.query.search
+    ? { name: { $regex: req.query.search, $options: 'i' } }
+    : {};
+
+  const count = await Product.countDocuments({ ...search });
+
+  const products = await Product.find({ ...search })
+    .skip(skip)
+    .limit(limit)
+    .sort(sortBy);
+
+  res.status(200).json({ products, pages: Math.ceil(count / limit) });
 });
 
 // @desc    Fetch single product
