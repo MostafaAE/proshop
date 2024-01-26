@@ -9,7 +9,8 @@
     "client": "npm run dev --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/dev-data/data/seeder.js --import",
-    "data:delete": "node backend/dev-data/data/seeder.js --delete"
+    "data:delete": "node backend/dev-data/data/seeder.js --delete",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
