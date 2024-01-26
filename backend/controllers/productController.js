@@ -9,8 +9,16 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
-  const count = await Product.countDocuments();
-  const products = await Product.find().skip(skip).limit(limit);
+
+  const search = req.query.search
+    ? { name: { $regex: req.query.search, $options: 'i' } }
+    : {};
+
+  const count = await Product.countDocuments({ ...search });
+
+  const products = await Product.find({ ...search })
+    .skip(skip)
+    .limit(limit);
 
   res.status(200).json({ products, pages: Math.ceil(count / limit) });
 });

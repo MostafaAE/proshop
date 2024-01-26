@@ -3,14 +3,19 @@ import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Paginate from '../components/Paginate';
 
 function HomeScreen() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get('page') || 1;
+  const search = searchParams.get('search') || '';
+  const { data, isLoading, error, isFetching } = useGetProductsQuery({
+    page,
+    search,
+  });
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isFetching) return <Loader />;
   if (error)
     return (
       <Message variant="danger">{error?.data?.message || error.error}</Message>
@@ -18,6 +23,11 @@ function HomeScreen() {
 
   return (
     <>
+      {search && (
+        <Link to="/" className="btn btn-light mb-4">
+          Go Back
+        </Link>
+      )}
       <h1>Latest Products</h1>
       <Row>
         {data.products.map(product => (
@@ -26,7 +36,7 @@ function HomeScreen() {
           </Col>
         ))}
       </Row>
-      <Paginate pages={data.pages} page={page} />
+      <Paginate pages={data.pages} page={page} keyword={search} />
     </>
   );
 }
