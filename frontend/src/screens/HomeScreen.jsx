@@ -3,12 +3,12 @@ import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Paginate from '../components/Paginate';
 
 function HomeScreen() {
-  const { page = 1 } = useParams();
-  const { data, isLoading, error } = useGetProductsQuery({ page });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page') || 1;
 
   if (isLoading) return <Loader />;
   if (error)

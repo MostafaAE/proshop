@@ -10,11 +10,12 @@ import {
   useGetProductsQuery,
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Paginate from '../../components/Paginate';
 
 function ProductListScreen() {
-  const { page = 1 } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page') || 1;
   const { data, refetch, isLoading, error } = useGetProductsQuery({ page });
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
