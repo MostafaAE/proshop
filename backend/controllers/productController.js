@@ -6,9 +6,13 @@ const Product = require('./../models/productModel');
 // @route   GET /api/products
 // @access  Public
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find();
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+  const count = await Product.countDocuments();
+  const products = await Product.find().skip(skip).limit(limit);
 
-  res.status(200).json(products);
+  res.status(200).json({ products, pages: Math.ceil(count / limit) });
 });
 
 // @desc    Fetch single product
