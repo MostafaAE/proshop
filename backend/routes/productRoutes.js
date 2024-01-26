@@ -15,6 +15,10 @@ router
   );
 
 router
+  .route('/top-3-products')
+  .get(productController.getTopProducts, productController.getAllProducts);
+
+router
   .route('/:id')
   .get(productController.getProduct)
   .delete(
@@ -31,4 +35,5 @@ router
 router
   .route('/:id/reviews')
   .post(authController.protect, productController.createProductReview);
+
 module.exports = router;

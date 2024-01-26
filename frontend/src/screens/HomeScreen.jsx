@@ -5,6 +5,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { Link, useSearchParams } from 'react-router-dom';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 
 function HomeScreen() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,6 +29,7 @@ function HomeScreen() {
           Go Back
         </Link>
       )}
+      <ProductCarousel />
       <h1>Latest Products</h1>
       <Row>
         {data.products.map(product => (
